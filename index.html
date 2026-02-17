@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VINZZTAMVANN CLOUD MARKETPLACE</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter;}
+body{background:#06080f;color:white;overflow-x:hidden;}
+
+/* BACKGROUND */
+.bg{
+position:fixed;inset:0;
+background:radial-gradient(circle at 20% 20%, rgba(59,130,246,.25), transparent 40%),
+radial-gradient(circle at 80% 30%, rgba(168,85,247,.25), transparent 45%),
+radial-gradient(circle at 50% 90%, rgba(34,211,238,.2), transparent 50%);
+filter:blur(120px);z-index:-1;
+}
+
+/* HEADER */
+header{
+padding:20px;text-align:center;
+background:rgba(0,0,0,.6);
+backdrop-filter:blur(20px);
+border-bottom:1px solid #1f2937;
+position:sticky;top:0;z-index:1000;
+}
+header h1{font-size:28px;font-weight:700;color:#3b82f6;}
+header p{font-size:13px;opacity:.6}
+
+/* GRID */
+.container{
+padding:30px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:22px;
+}
+
+/* CARD */
+.card{
+background:rgba(15,18,30,.65);
+border:1px solid rgba(59,130,246,.2);
+border-radius:20px;
+padding:22px;
+backdrop-filter:blur(25px);
+box-shadow:0 0 40px rgba(0,0,0,.6);
+transition:.35s;
+}
+.card:hover{
+transform:translateY(-10px);
+box-shadow:0 0 50px rgba(59,130,246,.4);
+}
+
+/* ICON */
+.iconBox{font-size:36px;color:#3b82f6;margin-bottom:12px;}
+.card:hover .iconBox{color:#22d3ee;}
+.card h3{font-size:18px;font-weight:600;margin-bottom:6px;}
+.price{font-size:17px;color:#22d3ee;font-weight:700;margin-bottom:6px;}
+.stock{font-size:12px;opacity:.5;margin-bottom:12px;}
+
+/* BUTTONS */
+.btns{display:flex;gap:10px;}
+.btns button{
+flex:1;padding:10px;border:none;border-radius:10px;
+font-size:13px;font-weight:600;cursor:pointer;
+transition:.2s;
+}
+.buy{background:#3b82f6;color:white;}
+.cart{background:rgba(255,255,255,.08);color:#22d3ee;border:1px solid rgba(34,211,238,.4);}
+.buy:hover{box-shadow:0 0 20px #3b82f6;}
+.cart:hover{background:rgba(34,211,238,.15);}
+
+/* CART FLOAT BUTTON */
+.cartBtn{
+position:fixed;bottom:20px;right:20px;
+background:#111;border:1px solid #3b82f6;
+padding:14px 22px;border-radius:50px;
+color:#22d3ee;cursor:pointer;box-shadow:0 0 25px #3b82f6;
+transition:.2s;z-index:9999;
+}
+.cartBtn.shake{animation:shake .4s;}
+@keyframes shake{
+0%,100%{transform:translateX(0);}
+25%{transform:translateX(-6px);}
+50%{transform:translateX(6px);}
+75%{transform:translateX(-3px);}
+}
+
+/* ADMIN BUTTON */
+.adminBtn{
+position:fixed;bottom:20px;left:20px;
+background:#111;border:1px solid #a855f7;
+padding:10px;border-radius:10px;color:#a855f7;cursor:pointer;z-index:9999;
+}
+
+/* CART PANEL */
+.cart-panel{
+position:fixed;top:0;right:-380px;width:380px;height:100%;
+background:#0b1020;border-left:1px solid #1f2937;
+padding:20px;transition:.4s;z-index:99999;
+}
+.cart-panel.active{right:0;}
+.cart-item{font-size:14px;margin:8px 0;display:flex;justify-content:space-between;align-items:center;}
+
+/* CLOSE CART BUTTON FIX */
+.closeCartBtn{
+position:absolute;top:12px;right:12px;
+background:#111;border:1px solid #ff0055;
+color:#ff0055;width:38px;height:38px;border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+font-size:18px;cursor:pointer;
+box-shadow:0 0 15px #ff0055;
+z-index:100000;
+}
+.closeCartBtn:hover{
+background:#ff0055;color:black;
+transform:rotate(90deg) scale(1.1);
+}
+
+/* TRASH */
+.trash{
+color:#ff0055;font-size:16px;cursor:pointer;
+filter:drop-shadow(0 0 6px #ff0055);
+transition:.2s;
+}
+.trash:hover{color:#ff00ff;transform:scale(1.2);}
+
+/* TOTAL */
+.totalBox{margin-top:10px;font-size:16px;font-weight:bold;color:#22d3ee;text-align:right;}
+
+/* INPUT */
+.cart-panel input{
+width:100%;padding:10px;margin:6px 0;border-radius:10px;
+border:1px solid #1f2937;background:#020617;color:white;
+}
+
+/* TOAST */
+.toast{
+position:fixed;top:20px;right:20px;
+background:rgba(15,18,30,.85);
+border:1px solid #3b82f6;
+padding:12px 20px;border-radius:12px;
+box-shadow:0 0 30px rgba(59,130,246,.6);
+opacity:0;transform:translateY(-10px);
+transition:.4s;z-index:99999;
+}
+
+/* ADMIN PANEL PREMIUM */
+.adminPanel{
+position:fixed;inset:0;background:rgba(0,0,0,.95);
+display:none;z-index:999999;padding:30px;
+backdrop-filter:blur(10px);
+}
+.adminPanel h2{color:#a855f7;margin-bottom:10px;}
+.adminPanel input{
+width:100%;padding:10px;margin:5px 0;
+border-radius:8px;background:#020617;color:white;border:1px solid #1f2937;
+}
+.adminPanel button{
+padding:10px;border:none;border-radius:8px;margin-top:8px;
+background:#a855f7;color:black;font-weight:bold;cursor:pointer;
+}
+
+/* ROCKET */
+.fly-rocket{
+position:fixed;font-size:28px;pointer-events:none;z-index:999999;
+transition:1.6s cubic-bezier(.25,.8,.25,1);
+filter:drop-shadow(0 0 20px cyan);
+}
+.trail{
+position:fixed;width:8px;height:8px;background:cyan;border-radius:50%;
+filter:blur(2px);opacity:.8;pointer-events:none;
+animation:fadeTrail .8s forwards;
+}
+@keyframes fadeTrail{to{opacity:0;transform:scale(2);}}
+
+/* FOOTER */
+.footer{text-align:center;padding:18px;font-size:12px;opacity:.4;border-top:1px solid #1f2937;}
+</style>
+</head>
+
+<body>
+<div class="bg"></div>
+
+<header>
+<h1>VINZZTAMVANN CLOUD MARKETPLACE</h1>
+<p>Enterprise Hosting • Digital Services • Premium Scripts</p>
+</header>
+
+<div class="container" id="products"></div>
+
+<div class="footer">© 2026 VINZZTAMVANN CLOUD SYSTEM</div>
+
+<div class="cartBtn" onclick="toggleCart()">🛒 Cart</div>
+<div class="adminBtn" onclick="openAdmin()">⚙️ Admin</div>
+
+<!-- CART -->
+<div class="cart-panel" id="cartPanel">
+<div class="closeCartBtn" onclick="toggleCart()"><i class="fa-solid fa-xmark"></i></div>
+
+<h3>🛒 Your Cart</h3>
+<div id="cartItems"></div>
+<div class="totalBox" id="cartTotal">Total: Rp 0</div>
+
+<h3>Buyer Name (Panel Only)</h3>
+<input id="buyerName" placeholder="Your Name">
+
+<button onclick="checkoutWA()" style="margin-top:10px;width:100%;padding:10px;border:none;border-radius:10px;background:#22d3ee;color:black;font-weight:700;">CHECKOUT WHATSAPP</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ADMIN PANEL -->
+<div class="adminPanel" id="adminPanel">
+<h2>⚙️ ADMIN CONTROL PANEL</h2>
+<input type="password" id="adminPass" placeholder="Password">
+<button onclick="loginAdmin()">LOGIN</button>
+
+<div id="adminEditor" style="display:none;">
+<h3>Edit Price & Stock</h3>
+<div id="adminInputs"></div>
+<button onclick="saveAdmin()">SAVE</button>
+<button onclick="closeAdmin()">CLOSE</button>
+</div>
+</div>
+
+<script>
+const ADMIN_PASS="VINZ123";
+const ADMIN_WA="6281917650317";
+
+let products=[
+{name:"Panel 1GB",price:1000,stock:10,type:"panel"},
+{name:"Panel 5GB",price:5000,stock:10,type:"panel"},
+{name:"Panel 10GB",price:10000,stock:10,type:"panel"},
+{name:"Panel Unlimited",price:15000,stock:5,type:"panel"},
+{name:"Nokos Indonesia",price:3000,stock:20,type:"nokos"},
+{name:"Jasa Rename Script Full",price:20000,stock:5,type:"service"},
+{name:"SC Mikasa MD Version 1",price:25000,stock:2,type:"script"}
+];
+
+if(localStorage.products){products=JSON.parse(localStorage.products);}
+let cart=[];
+
+/* ICON */
+function getIcon(t){
+if(t=="panel")return"fa-server";
+if(t=="nokos")return"fa-whatsapp";
+if(t=="service")return"fa-code";
+if(t=="script")return"fa-database";
+return"fa-cloud";
+}
+
+/* RENDER */
+const productsDiv=document.getElementById("products");
+function renderProducts(){
+productsDiv.innerHTML="";
+products.forEach((p,i)=>{
+productsDiv.innerHTML+=`
+<div class="card">
+<div class="iconBox"><i class="fa-solid ${getIcon(p.type)}"></i></div>
+<h3>${p.name}</h3>
+<div class="price">Rp ${p.price.toLocaleString()}</div>
+<div class="stock">Stock: ${p.stock}</div>
+<div class="btns">
+<button class="buy" onclick="buyNow(${i})">BUY NOW</button>
+<button class="cart" onclick="rocketToCart(this);addCart(${i})">ADD TO CART</button>
+</div>
+</div>`;
+});
+}
+renderProducts();
+
+/* TOAST */
+const toast=document.getElementById("toast");
+function showToast(m){
+toast.innerText=m;
+toast.style.opacity=1;
+toast.style.transform="translateY(0)";
+setTimeout(()=>{toast.style.opacity=0;toast.style.transform="translateY(-10px)";},1500);
+}
+
+/* CART */
+const cartPanel=document.getElementById("cartPanel");
+const cartItems=document.getElementById("cartItems");
+const cartTotal=document.getElementById("cartTotal");
+
+function toggleCart(){cartPanel.classList.toggle("active");renderCart();}
+
+function addCart(i){
+if(products[i].stock<=0)return showToast("SOLD OUT");
+cart.push(products[i]);
+products[i].stock--;
+renderProducts();
+showToast("Added to cart");
+}
+
+function renderCart(){
+cartItems.innerHTML="";
+let total=0;
+cart.forEach((c,i)=>{
+total+=c.price;
+cartItems.innerHTML+=`
+<div class="cart-item">
+${c.name} - Rp ${c.price.toLocaleString()}
+<i class="fa-solid fa-trash trash" onclick="cart.splice(${i},1);renderCart();showToast('Removed')"></i>
+</div>`;
+});
+cartTotal.innerText="Total: Rp "+total.toLocaleString();
+}
+
+function buyNow(i){cart=[products[i]];toggleCart();}
+
+/* CHECKOUT */
+function checkoutWA(){
+if(cart.length==0)return showToast("Cart empty");
+let name=buyerName.value||"No Name";
+let total=cart.reduce((a,b)=>a+b.price,0);
+let msg=`🔥 VINZZTAMVANN ORDER 🔥\nBuyer: ${name}\nTotal: Rp ${total}`;
+window.open("https://wa.me/"+ADMIN_WA+"?text="+encodeURIComponent(msg));
+}
+
+/* ADMIN */
+function openAdmin(){adminPanel.style.display="block";}
+function closeAdmin(){adminPanel.style.display="none";}
+function loginAdmin(){
+if(adminPass.value==ADMIN_PASS){
+adminEditor.style.display="block";
+renderAdmin();
+adminPass.style.display="none";
+}else alert("Wrong Password");
+}
+function renderAdmin(){
+adminInputs.innerHTML="";
+products.forEach((p,i)=>{
+adminInputs.innerHTML+=`
+<h4>${p.name}</h4>
+<input id="p${i}" value="${p.price}">
+<input id="s${i}" value="${p.stock}">
+`;
+});
+}
+function saveAdmin(){
+products.forEach((p,i)=>{
+p.price=parseInt(document.getElementById("p"+i).value);
+p.stock=parseInt(document.getElementById("s"+i).value);
+});
+localStorage.products=JSON.stringify(products);
+renderProducts();
+alert("Updated");
+}
+
+/* 🚀 SLOW PREMIUM ROCKET */
+function rocketToCart(btn){
+let cartBtn=document.querySelector(".cartBtn");
+let r1=btn.getBoundingClientRect();
+let r2=cartBtn.getBoundingClientRect();
+
+let rocket=document.createElement("div");
+rocket.className="fly-rocket";
+rocket.innerHTML="🚀";
+document.body.appendChild(rocket);
+
+rocket.style.left=r1.left+"px";
+rocket.style.top=r1.top+"px";
+
+let trailInterval=setInterval(()=>{
+let t=document.createElement("div");
+t.className="trail";
+t.style.left=rocket.style.left;
+t.style.top=rocket.style.top;
+document.body.appendChild(t);
+setTimeout(()=>t.remove(),800);
+},70);
+
+setTimeout(()=>{
+rocket.style.left=r2.left+"px";
+rocket.style.top=r2.top+"px";
+rocket.style.transform="scale(.3)";
+rocket.style.opacity="0";
+},50);
+
+setTimeout(()=>{
+clearInterval(trailInterval);
+rocket.remove();
+cartBtn.classList.add("shake");
+setTimeout(()=>cartBtn.classList.remove("shake"),400);
+},1600);
+}
+</script>
+
+</body>
+</html>
